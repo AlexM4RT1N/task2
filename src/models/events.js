@@ -23,11 +23,13 @@ auth.addEventListener('click', (e) =>{
 
 
 
-email.addEventListener('input', (e) => {    
+email.addEventListener('input', (e) => { 
+  email.style.borderColor = email.checkValidity() ?'#060':'red';
   sign_in.disabled = isValid()
   sign_up.disabled = isValid()
 })
 pass.addEventListener('input', (e) => {
+  pass.style.borderColor = pass.checkValidity() ?'#060':'red';
   sign_in.disabled = isValid()
   sign_up.disabled = isValid()
 })
