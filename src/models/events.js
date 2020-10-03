@@ -23,14 +23,23 @@ auth.addEventListener('click', (e) =>{
 
 
 
-email.addEventListener('input', (e) => { 
+if (email) email.addEventListener('input', (e) => { 
   email.style.borderColor = email.checkValidity() ?'#060':'red';
   sign_in.disabled = isValid()
   sign_up.disabled = isValid()
 })
-pass.addEventListener('input', (e) => {
+if (pass) pass.addEventListener('input', (e) => {
   pass.style.borderColor = pass.checkValidity() ?'#060':'red';
   sign_in.disabled = isValid()
   sign_up.disabled = isValid()
 })
 
+
+if (localStorage.getItem('acc_token')) {
+  setTimeout(() => {
+    document.getElementById('logout').addEventListener('click', (e) => {
+      localStorage.removeItem('acc_token')
+      location.reload()
+    })
+  }, 1000);
+}

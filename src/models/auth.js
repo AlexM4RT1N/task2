@@ -2,6 +2,23 @@ const {req, messHandl} = require('./methods')
 
 const rootUrl = 'http://142.93.134.108:1111'
 
+if (localStorage.getItem('acc_token')) {
+  req.get(rootUrl + '/me', {'Authorization': `Bearer ${localStorage.acc_token}`})        
+  .then(data => {
+    document.getElementById('auth').innerHTML = `
+    <h2 class="authorization__title"></h2>
+    <button class="logout__btn" id="logout">logout</button>`
+    if(!messHandl(data)) refresh(localStorage.ref_token)                   
+  })
+} else {
+  document.getElementById('auth').innerHTML = `<h2 class="authorization__title">Authorization</h2>
+  <div class="authorization__email"><input type="email" name="email" id="email" required/></div>
+  <div class="authorization__password"><input type="password" name="password" id="password" minlength="8" required/></div>
+  <div class="authorization__signin"><button id="sign_in" disabled>sign in</button></div>
+  <div class="authorization__signup"><button id="sign_up" disabled>sign up</button></div>`
+
+}
+
 function signUp(user) {
   req.post(rootUrl + '/sign_up', user)
   .then(data => {
@@ -19,15 +36,13 @@ function signIn(user) {
   .then(data => {
     if(data.hasOwnProperty("body")) {
       if(data.body.hasOwnProperty("access_token")) {
-        const acc_token = data.body.access_token
-        const ref_token = data.body.refresh_token
+        localStorage.acc_token = data.body.access_token;
+        localStorage.ref_token = data.body.refresh_token;
         
-        req.get(rootUrl + '/me', {'Authorization': `Bearer ${acc_token}`}) 
+        req.get(rootUrl + '/me', {'Authorization': `Bearer ${localStorage.acc_token}`}) 
         
         .then(data => {
-          document.getElementById('auth').innerHTML = `
-          <h2 class="authorization__title"></h2>`
-          if(!messHandl(data)) refresh(ref_token)                   
+          location.reload()                 
         })
       } else messHandl(data)      
     } else messHandl(data)
@@ -39,13 +54,20 @@ function refresh(ref_token) {
   req.post(rootUrl + '/refresh', null, {'Authorization': `Bearer ${ref_token}`})          
           
   .then(data => {
-    const new_token = data.body.access_token
-
-    req.get(rootUrl + '/me', {'Authorization': `Bearer ${new_token}`})
-
-    .then(data => {
-      messHandl(data)
-    })
+    if(data.hasOwnProperty("body")) {
+      if(data.body.hasOwnProperty("access_token")) {
+        localStorage.acc_token = data.body.access_token
+        location.reload()
+      } else {
+        localStorage.removeItem('acc_token')
+        messHandl(data)
+        location.reload()
+      }      
+    } else {
+      localStorage.removeItem('acc_token')
+        messHandl(data)
+        location.reload()
+    }
   })
 }
     

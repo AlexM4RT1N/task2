@@ -16,6 +16,7 @@ const req = {
 
 const messHandl = (data = {}) => {
   let status, mess, color;
+  console.log(data);
   if (data.hasOwnProperty("body")) {
     status = data.body.status.toLowerCase()
     mess = data.body.message 

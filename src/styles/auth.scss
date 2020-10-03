@@ -34,7 +34,8 @@ body {
   padding: 4px;
 }
 .authorization__signin button,
-.authorization__signup button { 
+.authorization__signup button,
+.logout__btn  { 
   width: 100%;
   height: 100%;
   color: #060;
@@ -51,6 +52,16 @@ body {
   margin-bottom: 28px;
   font-size: 23px;
 }
+
+.logout__btn {
+  min-width: 100px;
+  width: auto;
+  height: 40px;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}
+
 
 .authorization__email { 
 
